@@ -329,23 +329,6 @@ export default function Analysis() {
         </div>
       </motion.div>
 
-      {/* Note about backend */}
-      <motion.div
-        className="mt-12 p-6 bg-primary/5 border border-primary/20 rounded-xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 1.0 }}
-      >
-        <h3 className="text-lg font-semibold text-primary mb-2">Ready for Real Analytics?</h3>
-        <p className="text-muted-foreground mb-4">
-          To track real user progress, generate personalized insights, and store historical data, 
-          connect your app to Supabase for comprehensive analytics and reporting capabilities.
-        </p>
-        <Button variant="outline">
-          <BarChart3 className="w-4 h-4 mr-2" />
-          Learn About Analytics Setup
-        </Button>
-      </motion.div>
     </div>
   );
 }

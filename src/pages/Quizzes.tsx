@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Clock, Trophy, Star, ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useQuizzes, useQuizAttempts } from "@/hooks/useQuizzes";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { InteractiveQuiz } from "@/components/quiz/InteractiveQuiz";
 
 const quizzes = [
   {
@@ -55,6 +57,7 @@ const quizzes = [
 ];
 
 export default function Quizzes() {
+  const [activeQuiz, setActiveQuiz] = useState<any | null>(null);
   const { user } = useAuth();
   const { data: quizzes, isLoading: quizzesLoading } = useQuizzes();
   const { data: attempts } = useQuizAttempts(user?.id);
@@ -74,11 +77,61 @@ export default function Quizzes() {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "Easy": return "bg-success text-success-foreground";
-      case "Medium": return "bg-warning text-warning-foreground";
+      case "Medium": return "bg-warning text-warning-foreground"; 
       case "Hard": return "bg-destructive text-destructive-foreground";
       default: return "bg-muted text-muted-foreground";
     }
   };
+
+  const sampleQuestions = [
+    {
+      id: 1,
+      question: "What is the capital of France?",
+      options: ["London", "Berlin", "Paris", "Madrid"],
+      correctAnswer: 2,
+      explanation: "Paris is the capital and largest city of France."
+    },
+    {
+      id: 2,
+      question: "Which planet is known as the Red Planet?",
+      options: ["Venus", "Mars", "Jupiter", "Saturn"],
+      correctAnswer: 1,
+      explanation: "Mars is called the Red Planet due to its reddish appearance from iron oxide on its surface."
+    },
+    {
+      id: 3,
+      question: "What is 15 + 27?",
+      options: ["40", "42", "45", "48"],
+      correctAnswer: 1,
+      explanation: "15 + 27 = 42"
+    },
+    {
+      id: 4,
+      question: "Who wrote 'Romeo and Juliet'?",
+      options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+      correctAnswer: 1,
+      explanation: "William Shakespeare wrote the famous tragedy 'Romeo and Juliet'."
+    },
+    {
+      id: 5,
+      question: "What is the largest ocean on Earth?",
+      options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+      correctAnswer: 3,
+      explanation: "The Pacific Ocean is the largest and deepest ocean on Earth."
+    }
+  ];
+
+  const handleStartQuiz = (quiz: any) => {
+    const quizWithQuestions = {
+      ...quiz,
+      questions: sampleQuestions
+    };
+    setActiveQuiz(quizWithQuestions);
+  };
+
+  if (activeQuiz) {
+    return <InteractiveQuiz quiz={activeQuiz} onBack={() => setActiveQuiz(null)} />;
+  }
 
   if (quizzesLoading) {
     return (
@@ -203,7 +256,10 @@ export default function Quizzes() {
                     )}
 
                     <div className="flex gap-2">
-                      <Button className="flex-1 group-hover:shadow-medium transition-all duration-300">
+                      <Button 
+                        className="flex-1 group-hover:shadow-medium transition-all duration-300"
+                        onClick={() => handleStartQuiz(quiz)}
+                      >
                         <Play className="w-4 h-4 mr-2" />
                         {attempt ? "Retake Quiz" : "Start Quiz"}
                         <ArrowRight className="w-4 h-4 ml-2" />
@@ -228,23 +284,6 @@ export default function Quizzes() {
         )}
       </div>
 
-      {/* Note about backend */}
-      <motion.div
-        className="mt-12 p-6 bg-primary/5 border border-primary/20 rounded-xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-      >
-        <h3 className="text-lg font-semibold text-primary mb-2">Ready to Add Real Quizzes?</h3>
-        <p className="text-muted-foreground mb-4">
-          To store quiz data, user progress, and enable real-time scoring, you'll need to connect your app to Supabase. 
-          Lovable has a native integration that makes this simple!
-        </p>
-        <Button variant="outline">
-          <BookOpen className="w-4 h-4 mr-2" />
-          Learn About Supabase Integration
-        </Button>
-      </motion.div>
     </div>
   );
 }

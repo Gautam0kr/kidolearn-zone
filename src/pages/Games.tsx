@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Gamepad2, Trophy, Timer, Star, Play, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MathMemoryMatch } from "@/components/games/MathMemoryMatch";
+import { WordBuilderChallenge } from "@/components/games/WordBuilderChallenge";
 
 const games = [
   {
@@ -83,6 +86,30 @@ const getDifficultyColor = (difficulty: string) => {
 };
 
 export default function Games() {
+  const [activeGame, setActiveGame] = useState<string | null>(null);
+
+  const handlePlayGame = (gameId: number) => {
+    switch(gameId) {
+      case 1:
+        setActiveGame("math-memory");
+        break;
+      case 3:
+        setActiveGame("word-builder");
+        break;
+      default:
+        // For other games, we could add more implementations
+        break;
+    }
+  };
+
+  if (activeGame === "math-memory") {
+    return <MathMemoryMatch onBack={() => setActiveGame(null)} />;
+  }
+
+  if (activeGame === "word-builder") {
+    return <WordBuilderChallenge onBack={() => setActiveGame(null)} />;
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -191,9 +218,13 @@ export default function Games() {
                   <p className="text-xs text-muted-foreground">Last played: {game.lastPlayed}</p>
                 )}
 
-                <Button className="w-full group-hover:shadow-medium transition-all duration-300">
+                <Button 
+                  className="w-full group-hover:shadow-medium transition-all duration-300"
+                  onClick={() => handlePlayGame(game.id)}
+                  disabled={game.id !== 1 && game.id !== 3}
+                >
                   <Play className="w-4 h-4 mr-2" />
-                  Play Game
+                  {game.id === 1 || game.id === 3 ? "Play Game" : "Coming Soon"}
                 </Button>
               </CardContent>
             </Card>
@@ -215,23 +246,6 @@ export default function Games() {
         </p>
       </motion.div>
 
-      {/* Note about backend */}
-      <motion.div
-        className="mt-12 p-6 bg-primary/5 border border-primary/20 rounded-xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.9 }}
-      >
-        <h3 className="text-lg font-semibold text-primary mb-2">Ready for Interactive Games?</h3>
-        <p className="text-muted-foreground mb-4">
-          To save game scores, enable multiplayer features, and create interactive gameplay, 
-          connect your app to Supabase for real-time data storage and user management.
-        </p>
-        <Button variant="outline">
-          <Gamepad2 className="w-4 h-4 mr-2" />
-          Learn About Game Development
-        </Button>
-      </motion.div>
     </div>
   );
 }
