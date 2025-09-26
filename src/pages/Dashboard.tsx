@@ -4,8 +4,16 @@ import { StatsCard } from "@/components/StatsCard";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  
+  // Get display name from user metadata or fallback to email username
+  const displayName = user?.user_metadata?.display_name || 
+                     user?.user_metadata?.full_name || 
+                     user?.email?.split('@')[0] || 
+                     'Student';
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
@@ -22,7 +30,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Welcome back, Alex! 🎓
+            Welcome back, {displayName}! 🎓
           </motion.h1>
           <motion.p 
             className="text-lg opacity-90 mb-6"

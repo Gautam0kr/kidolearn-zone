@@ -12,6 +12,9 @@ import Resources from "./pages/Resources";
 import Analysis from "./pages/Analysis";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Achievements from "./pages/Achievements";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -70,20 +73,19 @@ const App = () => (
                 <Layout><Analysis /></Layout>
               </ProtectedRoute>
             } />
-            {/* Placeholder routes for profile sections */}
             <Route path="/achievements" element={
               <ProtectedRoute>
-                <Layout><div className="p-8 text-center"><h1 className="text-2xl font-bold mb-4">🏆 Achievements</h1><p className="text-muted-foreground">Coming soon! Track your learning milestones and rewards.</p></div></Layout>
+                <Layout><Achievements /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/profile" element={
               <ProtectedRoute>
-                <Layout><div className="p-8 text-center"><h1 className="text-2xl font-bold mb-4">👤 Profile</h1><p className="text-muted-foreground">Coming soon! Manage your account settings and preferences.</p></div></Layout>
+                <Layout><Profile /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
               <ProtectedRoute>
-                <Layout><div className="p-8 text-center"><h1 className="text-2xl font-bold mb-4">⚙️ Settings</h1><p className="text-muted-foreground">Coming soon! Customize your learning experience.</p></div></Layout>
+                <Layout><Settings /></Layout>
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
